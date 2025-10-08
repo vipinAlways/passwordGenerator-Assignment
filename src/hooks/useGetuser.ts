@@ -9,7 +9,7 @@ export function useAuth() {
     queryKey: ["auth-user"],
     queryFn: getCurrentUser,
   });
-  console.log({ data });
+  
 
   return {
     user: data ? data.user : null,

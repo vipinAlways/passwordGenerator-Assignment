@@ -37,7 +37,7 @@ const Passgen = () => {
 
       const { encryptedData, iv } = cryptoManager.encryptItem(formData);
 
-      console.log(encryptedData, iv);
+      
 
       mutate({ encryptedData, iv });
     },

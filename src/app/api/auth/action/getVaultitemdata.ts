@@ -18,15 +18,18 @@ export const getValutitems = async () => {
       })
       .sort({
         createdAt: -1,
-      });
+      })
+      .lean<
+        { _id: string; encryptedData: string; iv: string; createdAt: Date }[]
+      >();
 
     return vaultems.map((item) => ({
-      _id: item._id,
+      _id: item._id.toString(),
       encryptedData: item.encryptedData,
       iv: item.iv,
       createdAt: item.createdAt.toISOString(),
     }));
   } catch (error) {
-    throw error;    
+    throw error;
   }
 };

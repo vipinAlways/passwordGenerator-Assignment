@@ -28,9 +28,9 @@ import {
 import Passgen from "./Passgen";
 
 const Nav = () => {
-  const { user, isLoading, authenticated } = useAuth();
+  const { user } = useAuth();
   const isMobile = useIsMobile();
-  console.log({ user });
+  
 
   return (
     <nav className="w-full flex justify-between ">

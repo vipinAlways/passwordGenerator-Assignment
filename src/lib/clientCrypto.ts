@@ -13,7 +13,6 @@ class CryptoManager {
   }
 
   getKey(): string {
-    console.log("dshshkjshd", this.encryptionKey,"dsssds");
     if (!this.encryptionKey) {
       throw new Error("Encryption key not initialized. Please log in again.");
     }
@@ -35,9 +34,8 @@ class CryptoManager {
     url?: string;
     notes?: string;
   }): { encryptedData: string; iv: string } {
-   
     const key = this.getKey();
-    console.log({key});
+
     const iv = generateIV();
     const encryptedData = encryptVaultData(data, key, iv);
 

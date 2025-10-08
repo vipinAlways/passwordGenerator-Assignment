@@ -22,6 +22,9 @@ const page = () => {
       setPassword("");
       queryClient.invalidateQueries({ queryKey: ["auth-user"] });
       cryptoManager.initializeKey(password, data.encryptionSalt);
+
+      const key = cryptoManager.getKey();
+      sessionStorage.setItem("vaultKey", key);
     },
     onError: (error) => {
       toast.error(error.message);
