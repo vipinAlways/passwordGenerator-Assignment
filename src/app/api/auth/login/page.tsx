@@ -2,9 +2,11 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import React, { useCallback, useState } from "react";
-import { login } from "../action/signup";
+import { login } from "../action/login";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { toast } from "sonner";
+import { cryptoManager } from "@/lib/clientCrypto";
 
 const page = () => {
   const [email, setEmail] = useState<string>("");
@@ -14,11 +16,15 @@ const page = () => {
   const { mutate, isPending } = useMutation({
     mutationKey: ["check-user"],
     mutationFn: login,
-    onSuccess: () => {
-      router.push("/succes");
+    onSuccess: (data) => {
+      router.push("/");
       setEmail("");
       setPassword("");
-      queryClient.invalidateQueries({queryKey:["auth-user"]})
+      queryClient.invalidateQueries({ queryKey: ["auth-user"] });
+      cryptoManager.initializeKey(password, data.encryptionSalt);
+    },
+    onError: (error) => {
+      toast.error(error.message);
     },
   });
 
@@ -27,6 +33,9 @@ const page = () => {
       e.preventDefault();
 
       mutate({ email, password });
+
+      setEmail("");
+      setPassword("");
     },
     [email, password]
   );

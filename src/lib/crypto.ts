@@ -1,5 +1,6 @@
 import CryptoJS from "crypto-js";
 
+
 export async function generateSalt(): Promise<string> {
   return CryptoJS.lib.WordArray.random(128 / 8).toString();
 }
@@ -28,7 +29,6 @@ export function generateIV(): string {
  */
 export function encryptVaultData(
   data: {
-    title: string;
     username: string;
     password: string;
     url?: string;

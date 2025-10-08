@@ -10,7 +10,7 @@ export default function LogoutButton() {
   const { mutate, isPending } = useMutation({
     mutationFn: logout,
     onSuccess: () => {
-      router.push("/login"); // redirect after logout
+      router.push("/api/auth/login"); 
     },
   });
 

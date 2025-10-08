@@ -1,22 +1,21 @@
-import { cryptoManager } from "@/lib/clientCrypto";
+"use server";
 import dbConnect from "@/lib/dbconnect";
 import { getCurrentUser } from "@/lib/getCurrentUser";
 import vaultItemModel from "@/models/vaultItems";
 import { error } from "console";
 
 interface PostPasswordsProps {
-  title: string;
-  username: string;
-  password: string;
-  url?: string;
-  notes?: string;
+  encryptedData: string;
+  iv: string;
 }
 
-export const PostPasswords = async ({ data }: { data: PostPasswordsProps }) => {
+export const PostPasswords = async ({
+  encryptedData,
+  iv,
+}: PostPasswordsProps) => {
   await dbConnect();
 
   try {
-    const { encryptedData, iv } = cryptoManager.encryptItem(data);
     const userDetails = await getCurrentUser();
     if (!userDetails) {
       throw new Error("user is not authenticated");

@@ -25,6 +25,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./ui/dialog";
+import Passgen from "./Passgen";
 
 const Nav = () => {
   const { user, isLoading, authenticated } = useAuth();
@@ -40,17 +41,17 @@ const Nav = () => {
 
       <div className="flex gap-3 ">
         <DropdownMenu>
-          <DropdownMenuTrigger className="min-w-52 overflow-hidden">
+          <DropdownMenuTrigger className="min-w-52 overflow-hidden" asChild>
             <button className=" bg-white/10 backdrop:blur-3xl p-2 rounded-lg ">
               {" "}
-              {user?.email}
+              {user ?user.email : "Login"}
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-52">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuGroup>
               <DropdownMenuItem>
-                <LogoutButton />
+               {user ? <LogoutButton /> : <Link href={"/api/auth/login"}>Login</Link> } 
                 <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
               </DropdownMenuItem>
             </DropdownMenuGroup>
@@ -73,7 +74,9 @@ const Nav = () => {
                   Generate the tough pass and save so no worry about Remembar.
                 </DialogDescription>
               </DialogHeader>
-              <div className="grid gap-4"></div>
+              <div className="grid gap-4">
+                <Passgen />
+              </div>
               <DialogFooter>
                 <DialogClose asChild>
                   <button>Cancel</button>

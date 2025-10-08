@@ -1,10 +1,11 @@
 "use client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React, { useCallback, useState } from "react";
-import { signup } from "../action/action";
+import { signup } from "../action/signup";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import Link from "next/link";
+import { cryptoManager } from "@/lib/clientCrypto";
 
 const page = () => {
   const [email, setEmail] = useState<string>("");
@@ -14,11 +15,12 @@ const page = () => {
   const { mutate, isPending } = useMutation({
     mutationKey: ["Generate-user"],
     mutationFn: signup,
-    onSuccess: () => {
+    onSuccess: (data) => {
       router.push("/");
       setEmail("");
       setPassword("");
       queryClient.invalidateQueries({ queryKey: ["auth-user"] });
+      cryptoManager.initializeKey(password, data.encryptionSalt);
     },
     onError: (error) => {
       toast.error(error.message);

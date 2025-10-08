@@ -1,38 +1,30 @@
 "use server";
-
 import dbConnect from "@/lib/dbconnect";
 import userModel from "@/models/user";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { generateSalt } from "@/lib/crypto";
 import { cookies } from "next/headers";
 
-
-export const signup = async ({
+export const login = async ({
   email,
   password,
 }: {
   email: string;
   password: string;
 }) => {
-  if (!email || !password) throw new Error("Email and password required");
-
   await dbConnect();
 
   const existingUser = await userModel.findOne({ email });
-  if (existingUser) throw new Error("User already exists");
+  if (!existingUser) throw new Error("User not found");
 
-  const passwordHash = await bcrypt.hash(password, 10);
-  const encryptionSalt = await generateSalt();
-
-  const user = await userModel.create({
-    email,
-    passwordHash,
-    encryptionSalt,
-  });
+  const isPasswordValid = await bcrypt.compare(
+    password,
+    existingUser.passwordHash
+  );
+  if (!isPasswordValid) throw new Error("Invalid password");
 
   const token = jwt.sign(
-    { userId: user._id.toString() },
+    { userId: existingUser._id.toString() },
     process.env.JWT_SECRET!,
     {
       expiresIn: "7d",
@@ -51,6 +43,6 @@ export const signup = async ({
 
   return {
     success: true,
-    encryptionSalt, 
+    encryptionSalt: existingUser.encryptionSalt,
   };
 };
